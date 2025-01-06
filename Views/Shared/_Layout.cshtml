@@ -1,0 +1,702 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EmsiStudySpace</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    @{
+        var isRegisterPage = ViewContext.ActionDescriptor.DisplayName.Contains("Register");
+        var isLoginPage = ViewContext.ActionDescriptor.DisplayName.Contains("Login");
+        var isRegisterConfirmationPage = ViewContext.ActionDescriptor.DisplayName.Contains("RegisterConfirmation");
+        var isAdmin = User.IsInRole("Admin");
+        var isProf = User.IsInRole("Professeur");
+        var isEtudiant = User.IsInRole("Etudiant");
+    }
+
+    @if (!isRegisterPage && !isLoginPage || isRegisterConfirmationPage)
+    {
+
+        <div class="loader" id="loader"></div>
+
+        @if (isAdmin)
+        {
+            <div class="sidebar " id="sidebar">
+                <button id="toggle-btn" class="toggle-btn"><i class="fas fa-bars"></i></button>
+
+
+
+
+                <ul class="navbar-menu">
+
+                    <li class="navbar-item">
+                        <a href="@Url.Action("Statistics", "Home")" class="navbar-link">
+                            <i class="fas fa-chart-line icon"></i> <span class="menu-text">Statistiques</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="@Url.Action("Index", "Admin")" class="navbar-link">
+                            <i class="fas fa-user-shield"></i><span class="menu-text">Rôles</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="@Url.Action("IndexAssign", "Admin")" class="navbar-link">
+                            <i class="fas fa-users-cog"></i><span class="menu-text">Gérer Utilisateurs</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="@Url.Action("UserList", "Admin")" class="navbar-link">
+                            <i class="fas fa-users"></i><span class="menu-text">Activer&Désactiver</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="@Url.Action("PendingReservations", "Admin")" class="navbar-link">
+                            <i class="fas fa-clipboard-list"></i><span class="menu-text">Réservations</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="@Url.Action("UserHistory", "Admin")" class="navbar-link">
+                            <i class="fas fa-history"></i><span class="menu-text">Historique</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="@Url.Action("Index", "Home")" class="navbar-link">
+                            <i class="fas fa-user-circle icon"></i> <span class="menu-text">Profile</span>
+                        </a>
+                    </li>
+                    <li class="navbar-item dropdown">
+                        <a class="navbar-link " href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-cog"></i> <span class="menu-text">Compte</span>
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="userMenu">
+                            <li>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus"></i>  <span class="menu-text">Ajouter Utilisateur</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                    <i class="fas fa-user-cog"></i> <span class="menu-text"> Modifier mot de passe</span>
+                                </a>
+                            </li>
+                            <li>
+                                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" class="m-0">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt"></i>  <span class="menu-text">Déconnexion</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top rounded-navbar">
+                <!-- Logo -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-graduation-cap text-success me-2"></i>
+                    <span class="fw-bold text-success">EmsiStudySpace</span>
+                </a>
+
+                <!-- Toggle button for mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar content -->
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav mx-auto">
+                        @if (isProf)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Document")"><i class="fas fa-file-alt"></i> Documents</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "TypeDocuments")"><i class="fas fa-folder-open"></i> Catégories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Reservation" asp-action="MyReservations"><i class="fas fa-calendar-check"></i> Mes Réservations</a>
+                            </li>
+                        }
+                        @if (isEtudiant)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("DocumentTypes", "Student")"><i class="fas fa-book"></i> Documents</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Profile Section -->
+                    <div class="profile">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </header>
+
+            <style>
+                /* Navbar Styles */
+.navbar {
+    background-color: #ffffff; /* Fond blanc */
+    border-radius: 15px; /* Bordures arrondies */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    z-index: 1030; /* Toujours au-dessus des autres éléments */
+    transition: all 0.3s ease; /* Animation douce */
+                    max-height: 70px; /* Fixez une hauteur maximale */
+                    line-height: 1;
+                    justify-content: center;
+}
+
+/* Fixed Position */
+.fixed-top {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+/* Navbar Brand */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+                    color: #198754 !important;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.1);
+}
+
+/* Navbar Links */
+                .navbar .nav-item {
+                    margin: 0; /* Supprime les marges des éléments */
+                    padding: 0; /* Supprime les remplissages */
+                }
+
+                .navbar .nav-link {
+                    display: inline-block; /* Assure que les liens restent alignés */
+                    padding: 0.5rem 1rem; /* Ajoute des espacements internes contrôlés */
+                    line-height: 1.5; /* Aligne le texte verticalement */
+                    white-space: nowrap; /* Évite les sauts de ligne */
+                }
+
+.nav-link:hover {
+                    color: #198754; /* Vert */
+}
+
+/* Mobile Toggle */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+/* Rounded Borders on Scroll */
+.rounded-navbar {
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rounded-navbar:hover {
+    border-color: rgba(40, 167, 69, 0.6); /* Vert semi-transparent */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Ombre plus forte */
+}
+
+/* Profile Section */
+.profile {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.profile div {
+    margin-left: 15px;
+}
+
+/* Responsiveness */
+@@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+        padding: 15px 0;
+    }
+
+    .navbar-nav .nav-item {
+        margin-bottom: 10px;
+    }
+
+    .profile {
+        margin-top: 15px;
+    }
+}
+
+                body {
+                    padding-top: 70px; /* Ajustez cette valeur selon la hauteur de votre navbar */
+                }
+
+            </style>
+            
+
+
+        }
+    }
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    @RenderSection("Scripts", required: false)
+    <script>
+        window.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".navbar");
+            if (window.scrollY > 50) {
+                navbar.classList.add("scrolled");
+            } else {
+                navbar.classList.remove("scrolled");
+            }
+        });
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        window.addEventListener('load', function () {
+            document.getElementById('loader').style.display = 'none';
+        });
+
+        document.getElementById("toggle-btn").addEventListener("click", function () {
+            const navbar = document.getElementById("admin-navbar");
+            navbar.classList.toggle("collapsed");
+
+        });
+      
+        
+
+
+        
+    </script>
+</body>
+
+</html>
+
+<style>
+    /* Changer la couleur de fond du menu déroulant */
+    .custom-dropdown-menu {
+        background-color: white !important; /* Couleur de fond blanche */
+        color: white !important; /* Texte en noir */
+    }
+
+        /* Changer la couleur de fond des éléments de la liste au survol */
+        .custom-dropdown-menu .dropdown-item:hover {
+            background-color: #198754; /* Couleur gris clair au survol */
+            color: black; /* Texte noir au survol */
+        }
+
+        /* Changer la couleur du texte des éléments de la liste */
+        .custom-dropdown-menu .dropdown-item {
+            color: black; /* Texte noir */
+        }
+
+    .dropdown-menu {
+        background-color: #444;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: none;
+        position: relative;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-item {
+        color: #fff;
+        padding: 8px 15px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .dropdown-item:hover {
+            background-color: #555;
+        }
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: white;
+        color: #333;
+        padding: 10px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1001;
+        transition: padding 0.3s ease, background-color 0.3s ease;
+        font-size: 18px;
+    }
+
+        .topbar.collapsed {
+            padding-left: 100px;
+        }
+
+    /* Animation for Title */
+    .page-title {
+        margin: 0;
+        font-weight: bold;
+        animation: slideIn 1s ease-in-out forwards;
+        white-space: nowrap;
+    }
+
+    /* General Styles */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4; /* Background of the page */
+    }
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar {
+        width: 250px;
+        background-color: #ffff; /* Green sidebar background */
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        padding-top: 20px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+    }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 250px;
+        transition: margin-left 0.3s ease;
+    }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+    /* Navbar Menu Styles */
+    .navbar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar-item {
+        margin-bottom: 15px;
+    }
+
+    .navbar-link {
+        display: flex;
+        align-items: center;
+        color: #fff; /* White text for sidebar links */
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .navbar-link:hover {
+            background-color: #198754; /* Darker green for hover effect */
+            transform: scale(1.05); /* Slight zoom on hover */
+        }
+
+        .navbar-link i {
+            margin-right: 10px;
+        }
+
+    .menu-text {
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar.collapsed .menu-text {
+        opacity: 0; /* Hide text when the sidebar is collapsed */
+    }
+
+    /* Toggle Button Styles */
+    
+
+    /* Sidebar Animation */
+    .sidebar {
+        animation: slideIn 0.5s ease-in-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsiveness */
+    @@media screen and (max-width: 768px) {
+        .sidebar {
+            width: 200px;
+        }
+
+            .sidebar.collapsed {
+                width: 60px;
+            }
+
+        .content {
+            padding: 10px;
+        }
+
+        .toggle-btn {
+            top: 15px;
+            left: 10px;
+        }
+    }
+
+        .toggle-btn
+
+    {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 50px; /* Taille augmentée */
+        height: 50px;
+        background: linear-gradient(45deg, #198754, #198754); /* Dégradé pour un effet stylé */
+        color: white;
+        border: none;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre plus marquée */
+        cursor: pointer;
+        transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+
+        .toggle-btn:hover {
+            background-color: #198754; /* Darker green on hover */
+        }
+
+    /* Sidebar Menu Adjustments */
+    .sidebar {
+        position: fixed; /* Make it fixed on the left */
+        height: 100vh; /* Full height */
+        width: 250px;
+        background-color: #198754; /* Green background */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding-top: 60px; /* Space for the button */
+        transition: all 0.3s ease;
+    }
+
+        .sidebar.collapsed {
+            width: 80px;
+            text-align: center;
+        }
+
+    .navbar-link {
+        display: flex;
+        align-items: center;
+        color: white; /* White text for contrast */
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        .navbar-link:hover {
+            background-color: #218838; /* Slightly darker green */
+            transform: scale(1.05); /* Add a slight zoom effect */
+        }
+
+    /* Responsiveness */
+    @@media screen and (max-width: 768px) {
+        .sidebar {
+            width: 200px;
+        }
+
+            .sidebar.collapsed {
+                width: 60px;
+            }
+
+        .toggle-btn {
+            top: 10px;
+            left: 10px;
+            padding: 8px;
+        }
+    }
+
+    /* Icônes uniquement dans la version réduite */
+    .navbar-vertical.collapsed .navbar-link span {
+        display: none;
+    }
+
+    /* Hover effects */
+    .navbar-link:hover {
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: scale(1.05);
+    }
+
+    /* Bouton de bascule */
+    .toggle-btn {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+        transition: transform var(--transition-speed) ease;
+    }
+
+        .toggle-btn:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+
+   
+
+/* Fix profile to the right end */
+.profile {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    margin-left: auto; /* Push to the far right */
+}
+
+.navbar-nav {
+    display: flex;
+    flex-grow: 1; /* Make sure other items take the available space */
+        align-items: center;
+    }
+
+.navbar {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        align-items: center; /* Centre tous les enfants verticalement */
+    }
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: #28a745 !important;
+}
+
+.nav-link {
+    color: #555 !important;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #28a745;
+    color: #fff !important;
+    border-radius: 5px;
+}
+
+.dropdown-menu {
+    border-radius: 5px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.dropdown-item {
+    color: #555;
+    padding: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-item:hover {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* Animation */
+@@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+    .nav-item {
+        margin-left: 15px;
+        align-items: center;
+    }
+
+
+    .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        color: #28a745;
+        visibility: visible; /* Par défaut visible */
+        transition: visibility 0.3s linear, opacity 0.3s linear;
+    }
+
+        .loader.hidden {
+            visibility: hidden; /* Masquer après le chargement */
+            opacity: 0;
+        }
+        /* Ajout d'un espace pour compenser la largeur de la navbar latérale */
+.main-content {
+    margin-left: 250px; /* La largeur de la navbar latérale */
+    padding-top: 20px;  /* Espace pour le contenu sous la barre de navigation */
+    transition: margin-left 0.3s ease; /* Transition pour la navbar repliée */
+}
+
+/* Lorsque la navbar est réduite, le contenu prend moins de marge */
+.navbar-vertical.collapsed + .main-content {
+    margin-left: 80px; /* Largeur de la navbar réduite */
+}
+
+/* Résolution pour les écrans plus petits */
+@@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0; /* Retirer la marge pour les petits écrans */
+    }
+}
+
+
+
+
+</style>

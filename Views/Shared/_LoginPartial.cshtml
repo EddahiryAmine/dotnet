@@ -1,0 +1,153 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using EmsiStudySpace.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav ms-auto align-items-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="dropdown">
+            <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle"></i>
+                <span class="user-name">@UserManager.GetUserName(User)</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end animate-dropdown" aria-labelledby="userDropdown">
+                <li>
+                    <a class="dropdown-item manage-account" asp-area="Identity" asp-page="/Account/Manage/Index">
+                        <i class="fas fa-user-cog"></i> Gérer le compte
+                    </a>
+                </li>
+
+                <li>
+                    <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" class="m-0">
+                        <button id="logout" type="submit" class="dropdown-item logout-button">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="auth-links">
+            <a class="nav-link text-dark fw-bold auth-link" id="register" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user-plus"></i> Inscription
+            </a>
+            <a class="nav-link text-dark fw-bold auth-link" id="login" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt"></i> Connexion
+            </a>
+        </div>
+    }
+</ul>
+
+<style>
+    /* Global styles */
+    .nav-link {
+        color: #333;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+        .nav-link:hover {
+            color: #198754 !important;
+            background-color: rgba(40, 167, 69, 0.1);
+            border-radius: 5px;
+        }
+
+    /* User dropdown */
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #333;
+        font-weight: bold;
+    }
+
+        .user-profile i {
+            font-size: 1.5rem;
+            color: #555;
+            transition: color 0.3s;
+        }
+
+        .user-profile:hover i {
+            color: #198754;
+        }
+
+    .dropdown-menu {
+        border-radius: 8px;
+        border: none;
+        box-shadow: #fff
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.95rem;
+        color: #333;
+        padding: 10px 15px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .dropdown-item i {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .dropdown-item:hover {
+            background-color: #198754;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+            .dropdown-item:hover i {
+                color: #fff;
+            }
+
+    /* Logout button */
+    .logout-button {
+        background-color: transparent;
+        border: none;
+        font-size: 1rem;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        width: 100%;
+        color: #333;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .logout-button:hover {
+            background-color: #d9534f;
+            color: #fff;
+        }
+
+            .logout-button:hover i {
+                color: #fff;
+            }
+
+    /* Auth links */
+    .auth-links {
+        display: flex;
+        gap: 15px;
+    }
+
+    .auth-link {
+        color: #555;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 8px 12px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .auth-link:hover {
+            background-color: #198754;
+            color: #fff;
+            border-radius: 5px;
+        }
+</style>

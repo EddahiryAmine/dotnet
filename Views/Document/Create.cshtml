@@ -1,0 +1,228 @@
+﻿@model EmsiStudySpace.ViewModels.DocumentUploadViewModel
+
+<style>
+    body {
+        
+        padding-top: 100px;
+    }
+
+    
+
+    .form-container {
+        margin: auto;
+        padding: 3rem;
+        max-width: 800px;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        margin-top: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #198754;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .content {
+        flex-grow: 1;
+        padding-top: 60px; /* Ajustez si le nav est fixé */
+    }
+
+    h2::after {
+        content: '';
+        display: block;
+        margin: 0 auto;
+        width: 50px;
+        height: 3px;
+        background: #198754;
+        animation: expandUnderline 0.5s ease-in-out forwards;
+    }
+
+    @@keyframes expandUnderline {
+        from { width: 0; }
+        to { width: 50px; }
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+        flex: 1 1 calc(50% - 0.5rem);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+            border-color: #198754;
+        outline: none;
+        box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+    }
+
+    textarea.form-control {
+        resize: none;
+        height: 100px;
+    }
+
+    select.form-control {
+        appearance: none;
+        background: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDAwMDAwIiBoZWlnaHQ9IjEyIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMuJm5zcDtvcmdzLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMTRsLTYtNiAxLjQxLTEuNDFMMTIgMTEuMTZsNC41OS00LjU5TDE4IDE4eiIvPjwvc3ZnPg==') no-repeat right 1rem center;
+        background-size: 10px;
+        padding-right: 2.5rem;
+    }
+
+    input[type="file"] {
+        border: 2px dashed #e0e0e0;
+        padding: 1rem;
+        font-size: 0.9rem;
+        color: #666;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    input[type="file"]:focus {
+            border-color: #198754;
+        background-color: #f9f9f9;
+    }
+
+    .btn-primary {
+        background-color: #198754;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+            background-color: #198754;
+        transform: scale(1.05);
+    }
+
+    /* Checkbox styling */
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .checkbox-group div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    input[type="checkbox"] {
+        accent-color: #198754;
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+
+    /* Animation for form */
+    .form-container {
+        animation: fadeIn 1s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-back {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #198754;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .btn-back:hover {
+            color: #198754;
+    }
+</style>
+
+<div class="form-container">
+    <a href="javascript:history.back()" class="btn-back">← Retour</a>
+
+    <h2>Crée un document</h2>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Titre"></label>
+                <input asp-for="Titre" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TypeDocumentId">Type du document</label>
+                <select asp-for="TypeDocumentId" class="form-control">
+                    @foreach (var type in Model.TypeDocuments)
+                    {
+                        <option value="@type.Id">@type.Nom</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Format"></label>
+                <input asp-for="Format" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FileUpload">Uplodée un fichier</label>
+                <input asp-for="FileUpload" type="file" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Groupes</label>
+                <div class="checkbox-group">
+                    @foreach (var group in Model.AvailableGroups)
+                    {
+                        <div>
+                            <input type="checkbox" name="SelectedGroupIds" value="@group.Id" /> @group.Nom
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="ProfId" />
+        <input type="hidden" asp-for="ModuleId" />
+        <input type="hidden" asp-for="DateCreation" value="@DateTime.Now" />
+
+        <button type="submit" class="btn-primary">Crée le document</button>
+    </form>
+</div>

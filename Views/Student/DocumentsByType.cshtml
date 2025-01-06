@@ -1,0 +1,159 @@
+﻿@model IEnumerable<EmsiStudySpace.ViewModel.DocumentsByTypeViewModel>
+
+@{
+    ViewData["Title"] = "Documents par Type";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 70px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #198754;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+            h2::after {
+                content: "";
+                display: block;
+                width: 120px;
+                height: 4px;
+                background: #198754;
+                margin: 10px auto 0;
+                border-radius: 2px;
+            }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .file-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .file-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+        .file-icon {
+            font-size: 4rem;
+            color: #198754;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .file-card:hover .file-icon {
+            transform: rotate(20deg);
+        }
+
+        .file-card h3 {
+            font-size: 1.5rem;
+            color: #198754;
+            margin-bottom: 10px;
+        }
+
+        .file-card p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #198754;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+            .download-btn:hover {
+                background-color: #166c47;
+                transform: scale(1.1);
+            }
+
+        .file-card .ribbon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 30px;
+            background: #198754;
+            color: #fff;
+            font-size: 0.8rem;
+            text-align: center;
+            line-height: 30px;
+            transform: rotate(-45deg);
+            transform-origin: top left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h2>Documents par Type</h2>
+
+    @if (!Model.Any())
+    {
+        <p style="text-align: center; color: #6c757d;">Aucun document disponible pour ce type.</p>
+    }
+    else
+    {
+        <div class="container">
+            @foreach (var doc in Model)
+            {
+                <div class="file-card">
+                    <div class="ribbon">@doc.TypeDocument</div>
+
+                    <!-- Icônes dynamiques basées sur le type de document -->
+                    @{
+                        string iconClass = doc.TypeDocument switch
+                        {
+                            "PDF" => "fa-file-pdf",
+                            "DOCX" => "fa-file-word",
+                            "XLSX" => "fa-file-excel",
+                            _ => "fa-file"
+                        };
+                    }
+                    <i class="fas @iconClass file-icon"></i>
+
+                    <h3>@doc.Titre</h3>
+                    <p>@doc.Description</p>
+                    <small>Date de création: @doc.DateCreation.ToShortDateString()</small>
+                    <br>
+                    <a href="/@doc.CheminFichier" class="download-btn" download>
+                        Télécharger
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</body>
+</html>

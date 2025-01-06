@@ -1,0 +1,272 @@
+﻿@model EmsiStudySpace.ViewModel.AssignModuleAndGroupsViewModel
+<div class="wrapper">
+    <div class="content" id="content">
+        
+        <h1 class="page-title">
+            <i class="fas fa-user-cog text-success me-2"></i>
+            <span class="title-effect ">Affecter des groupes et Modules ou prefesseur : <span class="text-success">@Model.UserName</span></span>
+            <span class="underline"></span>
+        </h1>
+        <hr />
+        <form asp-action="AssignModuleAndGroups" method="post" class="shadow-sm p-4 bg-white rounded" style="max-width: 500px; margin: auto;">
+            <div class="form-group mb-4">
+       
+
+                <label for="SelectedModuleId" class="form-label"><i class="fas fa-user-tag text-success me-2"></i>Module:</label>
+                <select asp-for="SelectedModuleId" asp-items="@(new SelectList(Model.Modules, "Id", "Nom"))" class="form-select shadow-sm">
+            <option value="">-- Séléctionner Module --</option>
+        </select>
+
+
+                <label class="form-label">Groups:</label>
+            <div>
+                @for (int i = 0; i < Model.Groupes.Count; i++)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               value="@Model.Groupes[i].Id"
+                               name="SelectedGroupIds"
+                               id="group_@Model.Groupes[i].Id"
+                        @(Model.SelectedGroupIds != null && Model.SelectedGroupIds.Contains(Model.Groupes[i].Id) ? "checked" : "") />
+                        <label class="form-check-label" for="group_@Model.Groupes[i].Id">
+                            @Model.Groupes[i].Nom
+                        </label>
+                    </div>
+                }
+            </div>
+            </div>
+                <div class="d-flex justify-content-between">
+
+                <button type="submit" class="btn btn-success btn-icon">Assign</button>
+                <a asp-action="IndexAssign" class="btn btn btn-icon">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+
+</form>
+</div>
+</div>
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+</script>
+
+<style>
+    .page-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        display: inline-block;
+        position: relative;
+        padding-bottom: 10px;
+        overflow: hidden;
+    }
+
+        .page-title i {
+            color: #198754;
+            margin-right: 8px;
+        }
+
+    /* Animation de soulignement */
+    .underline {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background-color: #198754;
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: underlineAnimation 0.8s ease-out forwards;
+    }
+
+    .title-effect {
+        position: relative;
+        display: inline-block;
+    }
+
+        .title-effect::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 4px;
+            width: 100%;
+            background: linear-gradient(to right, #198754, #198754);
+            border-radius: 2px;
+            animation: slide-in 1s ease forwards;
+        }
+
+    @@keyframes slide-in {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+
+
+
+
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 250px;
+        transition: margin-left 0.3s ease;
+    }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+
+    /* Title with animation */
+    .title-effect {
+        position: relative;
+        display: inline-block;
+    }
+
+        .title-effect::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 4px;
+            width: 100%;
+            background: linear-gradient(to right, #198754, #198754);
+            border-radius: 2px;
+            animation: slide-in 1s ease forwards;
+        }
+
+    @@keyframes slide-in {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+    /* Form shadow and border */
+    form {
+        border: 1px solid #e0e0e0;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form labels and inputs */
+    .form-label {
+        font-weight: bold;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+    }
+
+        .form-select:focus {
+            border-color: #198754;
+            box-shadow: 0px 0px 8px rgba(40, 167, 69, 0.5);
+        }
+
+    /* Buttons with icons */
+    .btn-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .btn-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+        }
+
+    /* Success message */
+    .alert-success {
+        background: linear-gradient(to right, #198754, #218838);
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+    }
+
+    /* General transitions */
+    * {
+        transition: all 0.3s ease;
+    }
+    /* Label styling */
+    label {
+        font-weight: bold;
+        color: #198754; /* Vert */
+        margin-bottom: 0.5rem;
+    }
+
+    /* Styling for the select dropdown */
+    select {
+        width: 100%;
+        padding: 0.7rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #ffffff; /* Texte blanc */
+        background: #198754; /* Vert */
+        border: 2px solid #198754; /* Bordure verte foncée */
+        border-radius: 8px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        /* Hover effect */
+        select:hover {
+            background: #198754; /* Vert foncé */
+            color: #ffffff; /* Toujours texte blanc */
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Focus effect */
+        select:focus {
+            outline: none;
+            border-color: #198754; /* Vert plus intense */
+            box-shadow: 0px 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Option styling */
+        select option {
+            background: #ffffff; /* Fond blanc pour les options */
+            color: #198754; /* Texte vert */
+            padding: 0.5rem;
+        }
+</style>
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+</script>

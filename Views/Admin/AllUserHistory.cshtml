@@ -1,0 +1,372 @@
+﻿@{
+    ViewData["Title"] = "Historiques des Utilisateurs";
+}
+
+<div class="wrapper">
+    <div class="content" id="content">
+        <h1 class="page-title">
+            <i class="fas fa-history"></i>
+                    Historiques de toutes les connexions           
+                        <span class="underline"></span>
+        </h1>
+
+  
+        <hr />
+        <a href="@Url.Action("UserHistory", "Admin")" class="btn btn-outline-success btn-sm btn-icon return-btn">
+            <i class="fa fa-arrow-left"></i> Retour
+        </a>
+
+        <div class="filters">
+            <input type="text" id="searchBar" placeholder="Rechercher par email..." class="form-control glass-search filter-btn" />
+            <input type="date" id="filterLoginDate" placeholder="Filtrer par date de connexion" class="form-control glass-search filter-btn" />
+            <input type="date" id="filterLogoutDate" placeholder="Filtrer par date de déconnexion" class="form-control glass-search filter-btn" />
+        </div>
+
+        <table id="userTable" class="table table-hover align-middle shadow-sm rounded">
+            <thead>
+                <tr>
+
+                    <th><i class="fa fa-envelope  text-success me-2"></i> Email</th>
+                    <th><i class="fa fa-sign-in-alt  text-success me-2"></i> Date de connexion</th>
+                    <th><i class="fa fa-sign-out-alt  text-success me-2"></i> Date de déconnexion</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                @foreach (var history in Model)
+                {
+                    <tr class="bg-light table-row-hover">
+                     
+
+                        <td>@history.UserName</td>
+                        <td>@history.LoginTime</td>
+                        <td>@history.LogoutTime?.ToString("g")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div id="pagination" class="pagination"></div>
+    </div>
+</div>
+
+<style>
+    .filter-btn {
+        width: 40%;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        color: #333;
+        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2), 0 6px 20px rgba(0, 0, 0, 0.2);
+        outline: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .filter-btn:focus {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4), 0 6px 24px rgba(0, 0, 0, 0.3);
+        }
+
+    .filters {
+        display: flex;
+        gap: 10px; /* Espace entre les champs de filtrage */
+        margin-top: 10px;
+    }
+    .return-btn {
+        margin-bottom: 20px; /* Espace sous le bouton */
+    }
+    .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+        .filters .form-control {
+            width: auto;
+            flex: 1;
+        }
+
+    .pagination {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .pagination button {
+            background-color: #198754;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .pagination button:hover {
+                background-color: #218838;
+            }
+
+            .pagination button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+
+    .search-container {
+        display: flex;
+        justify-content: flex-end; /* Aligner la barre de recherche à droite */
+        margin-bottom: 20px;
+    }
+
+    .glass-search {
+        width: 40%;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        color: #333;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        outline: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .glass-search:focus {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .page-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        display: inline-block;
+        position: relative;
+        padding-bottom: 10px;
+        overflow: hidden;
+    }
+
+        .page-title i {
+            color: #198754;
+            margin-right: 8px;
+        }
+
+
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 250px;
+        transition: margin-left 0.3s ease;
+    }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+    /* Title animation */
+    .title-effect {
+        position: relative;
+        display: inline-block;
+    }
+
+        .title-effect::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 4px;
+            width: 100%;
+            background: linear-gradient(to right, #198754, #198754);
+            border-radius: 2px;
+            animation: slide-in 1s ease forwards;
+        }
+
+
+
+    .underline {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background-color: #198754;
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: underlineAnimation 0.8s ease-out forwards;
+    }
+
+    @@keyframes underlineAnimation {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+        /* Table headers gradient and shadow */
+        thead th {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+            thead th i {
+                font-size: 1.1rem;
+                vertical-align: middle;
+            }
+        /* Hover effect for rows */
+        .table-row-hover:hover {
+            background: #e8f5e9; /* Vert clair */
+            transition: background-color 0.3s ease;
+        }
+        /* Button animations */
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .btn-icon:hover {
+                transform: translateY(-3px);
+                box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+            }
+        /* Success message */
+        .alert-success {
+            background: linear-gradient(to right, #28a745, #218838);
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .table {
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        /* Actions */
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        /* Transitions fluides */
+        * {
+            transition: all 0.3s ease;
+        }
+        /* Alert */
+        .alert {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+</style>
+
+<script>
+    const rowsPerPage = 10;
+    const table = document.getElementById('historyTable');
+    const tableBody = document.getElementById('tableBody');
+    const pagination = document.getElementById('pagination');
+    const searchBar = document.getElementById('searchBar');
+    const filterLoginDate = document.getElementById('filterLoginDate');
+    const filterLogoutDate = document.getElementById('filterLogoutDate');
+    let currentPage = 1;
+    let rows = Array.from(tableBody.querySelectorAll('tr'));
+
+    function renderTable(rows) {
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        tableBody.innerHTML = '';
+        rows.slice(start, end).forEach(row => tableBody.appendChild(row));
+    }
+
+    function renderPagination(totalRows) {
+        pagination.innerHTML = '';
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement('button');
+            button.textContent = i;
+            button.disabled = i === currentPage;
+            button.addEventListener('click', () => {
+                currentPage = i;
+                updateTable();
+            });
+            pagination.appendChild(button);
+        }
+    }
+
+    function filterRows() {
+        const searchTerm = searchBar.value.toLowerCase();
+        const loginDate = filterLoginDate.value;
+        const logoutDate = filterLogoutDate.value;
+
+        return rows.filter(row => {
+            const cells = row.querySelectorAll('td');
+            const userName = cells[0].textContent.toLowerCase();
+            const loginTime = cells[1].textContent;
+            const logoutTime = cells[2].textContent;
+
+            const matchesSearch = searchTerm
+                ? userName.includes(searchTerm)
+                : true;
+            const matchesLoginDate = loginDate
+                ? loginTime.includes(loginDate)
+                : true;
+            const matchesLogoutDate = logoutDate
+                ? logoutTime.includes(logoutDate)
+                : true;
+
+            return matchesSearch && matchesLoginDate && matchesLogoutDate;
+        });
+    }
+
+    function updateTable() {
+        const filteredRows = filterRows();
+        renderTable(filteredRows);
+        renderPagination(filteredRows.length);
+    }
+
+    searchBar.addEventListener('input', updateTable);
+    filterLoginDate.addEventListener('input', updateTable);
+    filterLogoutDate.addEventListener('input', updateTable);
+
+    // Initialize table
+    updateTable();
+</script>
+
+
+
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+</script>

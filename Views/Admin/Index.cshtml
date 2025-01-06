@@ -1,0 +1,359 @@
+﻿@model List<EmsiStudySpace.ViewModel.UserRoleViewModel>
+<body>
+        <div id="loading-spinner" class="spinner">
+            <div class="spinner-circle"></div>
+        </div>
+
+
+
+
+    <div class="wrapper">
+        <div class="content" id="content">
+            <h1 class="page-title">
+                <i class="fas fa-user-shield"></i>
+                Role des utilisateurs
+                <span class="underline"></span>
+            </h1>
+
+            <div class="search-container">
+                <input type="text" id="searchBar" class="form-control glass-search" placeholder="Rechercher par nom ou prénom..." />
+            </div>
+            <hr />
+            @if (TempData["successMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> @TempData["successMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+
+            <div class="table-responsive">
+                <table id="userTable" class="table table-hover align-middle shadow-sm rounded">
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="fas fa-id-card text-success me-2"></i>Nom
+                            </th>
+                            <th>
+                                <i class="fas fa-id-badge text-success me-2"></i>Prénom
+                            </th>
+                            <th>
+                                <i class="fas fa-envelope text-success me-2"></i>Email
+                            </th>
+                            <th>
+                                <i class="fas fa-user-tag text-success me-2"></i>Rôle
+                            </th>
+                            <th class="text-center">
+                                <i class="fas fa-tools text-success me-2"></i>Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr class="bg-light table-row-hover">
+                                <td>@user.Nom</td>
+                                <td>@user.Prenom</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    @if (user.Roles != null && user.Roles.Any())
+                                    {
+                                        <span class="badge bg-success">@user.Roles.First()</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Aucun rôle assigné</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="AssignRole" asp-route-userId="@user.UserId" class="btn btn-outline-success btn-sm btn-icon">
+                                        <i class="fas fa-user-tag"></i> Affécter un rôle
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    window.onload = function () {
+        const spinner = document.getElementById("loading-spinner");
+        spinner.style.display = "none"; // Masquer le spinner après le chargement complet
+    };
+</script>
+<script>
+    // JavaScript pour gérer le spinner et la transition de la page
+    window.onload = function () {
+        // Masquer le spinner lorsque la page est entièrement chargée
+        const spinner = document.getElementById("loading-spinner");
+        spinner.style.display = "none"; // Cache le spinner
+
+        // Ajouter la classe "loaded" au body pour déclencher la transition de fondu
+        document.body.classList.add('loaded');
+
+        // Ajouter la classe "loaded" aux éléments de contenu pour l'effet fluide
+        const contentElements = document.querySelectorAll('.content h1, .content p');
+        contentElements.forEach(element => {
+            element.classList.add('loaded');
+        });
+    };
+
+</script>
+<style>
+   .spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Fond léger pour le spinner */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Assurez-vous que le spinner soit au-dessus de tout le contenu */
+}
+
+.spinner-circle {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* Couleur de fond du spinner */
+    border-top: 5px solid #198754; /* Couleur du spinner */
+    border-radius: 50%; /* Forme circulaire */
+    animation: spin 1s linear infinite; /* Animation de rotation */
+}
+
+/* Animation du spinner */
+@@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Effet de transition pour la page */
+body {
+    opacity: 0; /* Cache initialement le contenu */
+    transition: opacity 1s ease-in-out; /* Ajout de l'animation de fondu */
+}
+
+/* Lorsque la page est complètement chargée, applique la classe "loaded" */
+body.loaded {
+    opacity: 1; /* Restaure l'opacité du contenu */
+}
+
+    @@keyframes underlineAnimation {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* Barre de recherche */
+    .search-container {
+        display: flex;
+        justify-content: flex-end; /* Aligner la barre de recherche à droite */
+        margin-bottom: 20px;
+    }
+
+    .glass-search {
+        width: 40%;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        color: #333;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        outline: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .glass-search:focus {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+    .page-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        display: inline-block;
+        position: relative;
+        padding-bottom: 10px;
+        overflow: hidden;
+    }
+
+        .page-title i {
+            color: #198754;
+            margin-right: 8px;
+        }
+
+    /* Animation de soulignement */
+    .underline {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background-color: #198754;
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: underlineAnimation 0.8s ease-out forwards;
+    }
+    
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    
+
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 250px;
+        transition: margin-left 0.3s ease;
+    }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+    
+    /* Title animation */
+    .title-effect {
+        position: relative;
+        display: inline-block;
+    }
+
+    .title-effect::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 4px;
+        width: 100%;
+            background: linear-gradient(to right, #198754, #198754);
+        border-radius: 2px;
+        animation: slide-in 1s ease forwards;
+    }
+
+    @@keyframes slide-in {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    /* Table headers gradient and shadow */
+    
+
+    thead th {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: bold;
+        text-align: left;
+        padding: 12px 16px;
+    }
+
+    thead th i {
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+
+    /* Hover effect for rows */
+    .table-row-hover:hover {
+        background: #e8f5e9; /* Vert clair */
+        transition: background-color 0.3s ease;
+    }
+
+    /* Button animations */
+    .btn-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-icon:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+    }
+
+    /* Success message */
+    .alert-success {
+        background: linear-gradient(to right, #28a745, #218838);
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .table {
+        margin-top: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    
+
+    /* Actions */
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    /* Transitions fluides */
+    * {
+        transition: all 0.3s ease;
+    }
+</style>
+<script>
+    // Filtrage dynamique
+    document.getElementById("searchBar").addEventListener("keyup", function () {
+        const searchValue = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#userTable tr");
+
+        rows.forEach(row => {
+            const userName = row.cells[0]?.textContent.toLowerCase() || "";
+            const userEmail = row.cells[1]?.textContent.toLowerCase() || "";
+
+            if (userName.includes(searchValue) || userEmail.includes(searchValue)) {
+                row.style.display = ""; // Afficher la ligne
+            } else {
+                row.style.display = "none"; // Masquer la ligne
+            }
+        });
+    });
+</script>
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+
+ 
+</script>

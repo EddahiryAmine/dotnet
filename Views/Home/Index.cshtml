@@ -1,0 +1,693 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@model EmsiStudySpace.ViewModel.UserDataViewModel
+
+@{
+    ViewData["Title"] = "Profil de l'utilisateur";
+    var roles = await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User));
+    var isEtudiant = roles.Contains("Etudiant");
+    var isAdmin = User.IsInRole("Admin");
+    var isProf = User.IsInRole("Professeur");
+}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title>Profil Utilisateur</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/jquery-ui.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/jquery.fancybox.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css" asp-append-version="true">
+    <link rel="stylesheet" href="/fonts/flaticon/font/flaticon.css">
+    <link rel="stylesheet" href="/css/aos.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/jquery.mb.YTPlayer.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/style.css" asp-append-version="true">
+</head>
+
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    @if (isAdmin)
+    {
+
+        <div class="wrapper">
+            <div class="content" id="content">
+                <div class="header">
+                    <div class="logo-container">
+                        <img src="/Images/emsilogo.png" alt="EmsistadySpace Logo" class="logo">
+                    </div>
+                    <div class="app-name-container">
+
+                        <span class="app-name">
+                            <i class="fas fa-graduation-cap text-success me-2">EmsiStudySpace</i>
+
+                        </span>
+                    </div>
+                </div>
+                <span class="underline"></span>
+
+                <div class="container emp-profile">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="photo-container">
+                                    <img id="profile-picture" src="https://via.placeholder.com/150" alt="Photo de profil" />
+                                    <label for="photo-upload" class="change-photo-btn">
+                                        <i class="icon-camera"></i> Changer la photo
+                                    </label>
+                                    <input type="file" id="photo-upload" name="file" accept="image/*" onchange="previewImage(event)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-head">
+                                <h5><strong>@Model.User.Nom @Model.User.Prenom</strong></h5>
+                                <h6 class="text-success">@roles.FirstOrDefault()</h6>
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Informations </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="tab-content profile-tab" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row ">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-user"></i> ID Utilisateur</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.Id</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-user"></i> Nom</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.Nom @Model.User.Prenom</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-envelope"></i> Email</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.Email</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-phone"></i> Téléphone</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.PhoneNumber</p>
+                                            </div>
+                                        </div>
+                                        @if (isEtudiant)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label><i class="icon-graduation-cap"></i> Filière</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>@ViewBag.FiliereNom</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label><i class="icon-group"></i> Groupe</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>@ViewBag.GroupeNom</p>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.Groupes != null && Model.Groupes.Any())
+                                        {
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label><i class="fas fa-users profile-icon"></i>Groupes Affectés</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <ul class="list-group profile-list">
+                                                        @foreach (var groupe in Model.Groupes)
+                                                        {
+                                                            <li class="list-group-item profile-list-item">
+                                                                <i class="fas fa-user-group"></i>
+                                                                <strong>Groupe :</strong> @groupe.Nom
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                            @if (Model.Modules != null && Model.Modules.Any())
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label><i class="fas fa-graduation-cap profile-icon"></i>Modules Affectés</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul class="list-group profile-list">
+                                                            @foreach (var module in Model.Modules)
+                                                            {
+                                                                <li class="list-group-item profile-list-item">
+                                                                    <i class="fas fa-book-open"></i>
+                                                                    <strong>Module :</strong> @module.Nom
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+                <div class="header">
+                    <div class="logo-container">
+                        <img src="/Images/emsilogo.png" alt="EmsistadySpace Logo" class="logo">
+                    </div>
+                    <div class="app-name-container">
+
+                        <span class="app-name">
+                            <i class="fas fa-graduation-cap text-success me-2">EmsiStudySpace</i>
+
+                        </span>
+                    </div>
+                </div>
+                <span class="underline"></span>
+
+                <div class="container emp-profile">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="photo-container">
+                                    <img id="profile-picture" src="https://via.placeholder.com/150" alt="Photo de profil" />
+                                    <label for="photo-upload" class="change-photo-btn">
+                                        <i class="icon-camera"></i> Changer la photo
+                                    </label>
+                                    <input type="file" id="photo-upload" name="file" accept="image/*" onchange="previewImage(event)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-head">
+                                <h5><strong>@Model.User.Nom @Model.User.Prenom</strong></h5>
+                                <h6 class="text-success">@roles.FirstOrDefault()</h6>
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Informations </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="tab-content profile-tab" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row ">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-user"></i> ID Utilisateur</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.Id</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-user"></i> Nom</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.Nom @Model.User.Prenom</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-envelope"></i> Email</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.Email</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><i class="icon-phone"></i> Téléphone</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.User.PhoneNumber</p>
+                                            </div>
+                                        </div>
+                                        @if (isEtudiant)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label><i class="icon-graduation-cap"></i> Filière</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>@ViewBag.FiliereNom</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label><i class="icon-group"></i> Groupe</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>@ViewBag.GroupeNom</p>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.Groupes != null && Model.Groupes.Any())
+                                        {
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label><i class="fas fa-users profile-icon"></i>Groupes Affectés</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <ul class="list-group profile-list">
+                                                        @foreach (var groupe in Model.Groupes)
+                                                        {
+                                                            <li class="list-group-item profile-list-item">
+                                                                <i class="fas fa-user-group"></i>
+                                                                <strong>Groupe :</strong> @groupe.Nom
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                            @if (Model.Modules != null && Model.Modules.Any())
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label><i class="fas fa-graduation-cap profile-icon"></i>Modules Affectés</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul class="list-group profile-list">
+                                                            @foreach (var module in Model.Modules)
+                                                            {
+                                                                <li class="list-group-item profile-list-item">
+                                                                    <i class="fas fa-book-open"></i>
+                                                                    <strong>Module :</strong> @module.Nom
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    }
+
+</body>
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+</script>
+<script>
+    // Fonction pour prévisualiser l'image
+    function previewImage(event) {
+        const input = event.target;
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            const imageElement = document.getElementById("profile-picture");
+            imageElement.src = reader.result;
+        };
+
+        if (input.files && input.files[0]) {
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fonction pour créer une image dynamique à partir de l'initiale
+        function setInitialProfileLetter(name) {
+            const profilePhoto = document.getElementById('profile-photo');
+            const initial = name.charAt(0).toUpperCase(); // Obtenez la première lettre
+            profilePhoto.textContent = initial; // Définissez le contenu du conteneur
+        }
+
+        // Récupérer le nom de l'utilisateur depuis Razor ou JSON passé par le modèle
+        const userName = '@Model.User.Nom'; // Assurez-vous que c'est une chaîne valide
+        setInitialProfileLetter(userName);
+
+        // Fonction pour afficher une image sélectionnée
+        window.uploadPhoto = function (input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const profilePhoto = document.getElementById('profile-photo');
+                    profilePhoto.style.backgroundImage = `url(${e.target.result})`;
+                    profilePhoto.textContent = ''; // Masquer la lettre
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+    });
+</script>
+
+<style>
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        padding: 1em;
+        background-color: #f4f4f4; /* Couleur de fond */
+        border-bottom: 2px solid #ddd; Ligne de séparation
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        width: 200px; /* Taille du logo */
+        height: auto; /* Conserve les proportions */
+    }
+
+    .app-name-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .app-name {
+        font-size: 1.8em; /* Taille du texte
+        font-weight: bold; /* Texte en gras */
+        color: #198754; /* Couleur du texte */
+        font-family: 'Arial', sans-serif;
+        text-align: right;
+    }
+    .profile-img {
+        text-align: center;
+    }
+
+    .photo-container {
+        position: relative;
+        display: inline-block;
+    }
+
+        .photo-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover; /* S'assure que l'image est bien adaptée */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .photo-container img:hover {
+                transform: scale(1.1);
+                box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            }
+
+    .change-photo-btn {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .change-photo-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .change-photo-btn i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+    .photo-container input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+
+    .profile-img {
+        text-align: center;
+        position: relative;
+    }
+
+        .profile-img img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover; /* S'assure que l'image s'adapte bien */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .profile-img img:hover {
+                transform: scale(1.1);
+                box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            }
+
+    .file {
+        position: relative;
+        overflow: hidden;
+        margin-top: 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 30px;
+        background: #198754;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .file:hover {
+            background-color: #145a32;
+        }
+
+        .file input {
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+
+
+    .dynamic-photo {
+        width: 150px;
+        height: 150px;
+        background-color: #198754;
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        text-transform: uppercase;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.3s ease;
+    }
+
+        .dynamic-photo:hover {
+            transform: scale(1.1);
+        }
+
+        .dynamic-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+
+
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 250px;
+        transition: margin-left 0.3s ease;
+    }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+    /* Navbar Menu Styles */
+    .navbar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+
+
+    body {
+        background: #ffff font-family: 'Muli', sans-serif;
+    }
+
+    .emp-profile {
+        padding: 3%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        border-radius: 1rem;
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+
+        .emp-profile:hover {
+            transform: scale(1.02);
+        }
+
+    .profile-img {
+        text-align: center;
+    }
+
+        .profile-img img {
+            width: 70%;
+            height: 100%;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+            .profile-img img:hover {
+                transform: scale(1.1);
+            }
+
+    .profile-head h5 {
+        color: #333;
+        font-weight: bold;
+    }
+
+    .profile-head h6 {
+        color: #198754;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .profile-edit-btn {
+        border: none;
+        border-radius: 1.5rem;
+        width: 70%;
+        padding: 2%;
+        font-weight: 600;
+        color: white;
+        background-color: #198754;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .profile-edit-btn:hover {
+            background-color: #198754;
+        }
+
+    .profile-head .nav-tabs {
+        margin-bottom: 5%;
+    }
+
+        .profile-head .nav-tabs .nav-link {
+            font-weight: 600;
+            border: none;
+            transition: border-bottom 0.3s ease;
+        }
+
+            .profile-head .nav-tabs .nav-link.active {
+                border-bottom: 2px solid #198754;
+            }
+
+    .row i {
+        color: #28a745;
+        margin-right: 10px;
+    }
+
+    .profile-img .file {
+        position: relative;
+        overflow: hidden;
+        margin-top: -20%;
+        width: 70%;
+        border: none;
+        border-radius: 0;
+        font-size: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .profile-img .file:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .profile-img .file input {
+            position: absolute;
+            opacity: 0;
+            right: 0;
+            top: 0;
+        } */
+
+</style>
+</html>

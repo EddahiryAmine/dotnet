@@ -1,0 +1,585 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Inscription";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .page-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 10px;
+            overflow: hidden;
+        }
+
+            .page-title i {
+                color: #198754;
+                margin-right: 8px;
+            }
+        .underline {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background-color: #198754;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underlineAnimation 0.8s ease-out forwards;
+        }
+        .form-container {
+            margin: 50px auto;
+            max-width: 600px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .form-container h1 {
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: #198754;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+        .title-effect {
+            position: relative;
+            display: inline-block;
+        }
+
+            .title-effect::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                height: 4px;
+                width: 100%;
+                background: linear-gradient(to right, #198754, #198754);
+                border-radius: 2px;
+                animation: slide-in 1s ease forwards;
+            }
+
+        @@keyframes slide-in {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .form-floating {
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: #198754;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+            .btn:hover {
+                background: #198754;
+            }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            color: #333;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1001;
+            transition: padding 0.3s ease, background-color 0.3s ease;
+            font-size: 18px;
+        }
+
+            .topbar.collapsed {
+                padding-left: 100px;
+            }
+
+        /* Animation for Title */
+        .page-title {
+            margin: 0;
+            font-weight: bold;
+            animation: slideIn 1s ease-in-out forwards;
+            white-space: nowrap;
+        }
+
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Background of the page */
+        }
+
+        .wrapper {
+            display: flex;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #198754; /* Green sidebar background */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+        }
+
+            .sidebar.collapsed {
+                width: 80px;
+            }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+        }
+
+            .content.collapsed {
+                margin-left: 80px;
+            }
+
+        /* Navbar Menu Styles */
+        .navbar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar-item {
+            margin-bottom: 15px;
+        }
+
+        .navbar-link {
+            display: flex;
+            align-items: center;
+            color: #fff; /* White text for sidebar links */
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+            .navbar-link:hover {
+                background-color: #198754; /* Darker green for hover effect */
+                transform: scale(1.05); /* Slight zoom on hover */
+            }
+
+            .navbar-link i {
+                margin-right: 10px;
+            }
+
+        .menu-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .menu-text {
+            opacity: 0; /* Hide text when the sidebar is collapsed */
+        }
+
+        /* Toggle Button Styles */
+        .toggle-btn {
+            background: #198754; /* Green toggle button background */
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+            .toggle-btn:hover {
+                background-color: #198754; /* Darker green for hover effect */
+                transform: rotate(90deg); /* Rotate the button on hover */
+            }
+
+        /* Sidebar Animation */
+        .sidebar {
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsiveness */
+        @@media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+                .sidebar.collapsed {
+                    width: 60px;
+                }
+
+            .content {
+                padding: 10px;
+            }
+
+            .toggle-btn {
+                top: 15px;
+                left: 10px;
+            }
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 50px; /* Taille augmentée */
+            height: 50px;
+            background: linear-gradient(45deg, #198754, #198754); /* Dégradé pour un effet stylé */
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre plus marquée */
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+
+            .toggle-btn:hover {
+                background-color: #198754; /* Darker green on hover */
+            }
+
+        /* Sidebar Menu Adjustments */
+        .sidebar {
+            position: fixed; /* Make it fixed on the left */
+            height: 100vh; /* Full height */
+            width: 250px;
+            background-color: #198754; /* Green background */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding-top: 60px; /* Space for the button */
+            transition: all 0.3s ease;
+        }
+        /* Title animation */
+        .title-effect {
+            position: relative;
+            display: inline-block;
+        }
+
+            .sidebar.collapsed {
+                width: 80px;
+                text-align: center;
+            }
+
+        .navbar-link {
+            display: flex;
+            align-items: center;
+            color: white; /* White text for contrast */
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .navbar-link:hover {
+                background-color: #198754; /* Slightly darker green */
+                transform: scale(1.05); /* Add a slight zoom effect */
+            }
+
+        /* Responsiveness */
+        @@media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+                .sidebar.collapsed {
+                    width: 60px;
+                }
+
+            .toggle-btn {
+                top: 10px;
+                left: 10px;
+                padding: 8px;
+            }
+        }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+        /* Custom styling for the page */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 30px;
+            color: #198754; /* Green */
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-floating .form-control {
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+            .form-floating .form-control:focus {
+                border-color: #198754; /* Green */
+                box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+            }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .btn-success {
+            background-color: #198754; /* Green */
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+            .btn-success:hover {
+                background-color: #198754; /* Darker green on hover */
+                transform: scale(1.05);
+            }
+
+            .btn-success i {
+                font-size: 20px;
+            }
+
+        .text-danger {
+            font-size: 14px;
+            color: #e3342f;
+        }
+
+        /* Animation for the alert message */
+        .alert {
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            font-size: 16px;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Form container */
+        .container {
+            margin-top: 20px;
+        }
+
+        /* Center the form */
+        .row.justify-content-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .form-floating {
+            position: relative;
+        }
+
+        .formch {
+            margin-top: -20px;
+        }
+        /* Buttons with icons */
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .btn-icon:hover {
+                transform: translateY(-3px);
+                box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+            }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        <div class="sidebar" id="sidebar">
+        <button id="toggle-btn" class="toggle-btn">☰</button>
+
+
+
+
+        <ul class="navbar-menu">
+
+        <li class="navbar-item">
+                    <a href="@Url.Action("Statistics", "Home")" class="navbar-link">
+        <i class="fas fa-home"></i><span class="menu-text">Accueil</span>
+        </a>
+        </li>
+        <li class="navbar-item">
+        <a href="@Url.Action("Index", "Admin")" class="navbar-link">
+        <i class="fas fa-user-shield"></i><span class="menu-text">Rôles</span>
+        </a>
+        </li>
+        <li class="navbar-item">
+        <a href="@Url.Action("IndexAssign", "Admin")" class="navbar-link">
+        <i class="fas fa-users-cog"></i><span class="menu-text">Gérer Utilisateurs</span>
+        </a>
+        </li>
+        <li class="navbar-item">
+        <a href="@Url.Action("UserList", "Admin")" class="navbar-link">
+        <i class="fas fa-users"></i><span class="menu-text">Activer&Désactiver</span>
+        </a>
+        </li>
+        <li class="navbar-item">
+        <a href="@Url.Action("PendingReservations", "Admin")" class="navbar-link">
+        <i class="fas fa-clipboard-list"></i><span class="menu-text">Réservations</span>
+        </a>
+        </li>
+        <li class="navbar-item">
+        <a href="@Url.Action("UserHistory", "Admin")" class="navbar-link">
+        <i class="fas fa-history"></i><span class="menu-text">Historique</span>
+        </a>
+        </li>
+                <li class ="navbar-item">
+                    <a class="navbar-link" asp-area="Identity" asp-page="/Account/Register">
+                        <i class="fas fa-user-plus"></i>  <span class="menu-text"> Ajouter Utilisateur</span>
+                                </a>
+                            </li>
+                <li class="navbar-item">
+                    <a class="navbar-link" asp-area="Identity" asp-page="/Account/Manage/Index">
+                        <i class="fas fa-user-cog"></i>  <span class="menu-text"> Modifier mot de passe</span>
+                                </a>
+                            </li >
+                <li class="navbar-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" class="m-0">
+                        <button type="submit" class="dropdown-item ">
+                                        <i class="fas fa-sign-out-alt"></i> <span class="menu-text">Déconexion</span>
+                                    </button>
+                                </form>
+                            </li>
+        </ul>
+        </div>
+        <div class="content" id="content">
+            <h1 class="page-title">
+                <i class="fas fa-user-plus"></i>
+                Ajouter utilisateur
+                <span class="underline"></span>
+            </h1>
+            <hr />
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="formch">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Nom" class="form-control" autocomplete="username" aria-required="true" placeholder="Nom" />
+                            <label asp-for="Input.Nom" class="form-label">
+                    <i class="fas fa-user"></i> Nom
+                </label>
+                <span asp-validation-for="Input.Nom" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Prenom" class="form-control" autocomplete="username" aria-required="true" placeholder="Prénom" />
+                            <label asp-for="Input.Prenom" class="form-label">
+                    <i class="fas fa-user"></i> Prénom
+                </label>
+                <span asp-validation-for="Input.Prenom" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email" class="form-label">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.Password" class="form-label">
+                    <i class="fas fa-lock"></i> Mot de passe
+                </label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.ConfirmPassword" class="form-label">
+                    <i class="fas fa-lock"></i> Confirmez le mot de passe
+                </label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+                        <button id="registerSubmit" type="submit" class="btn btn btn-icon">S'inscrire</button>
+        </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    <script>
+        document.getElementById("toggle-btn").addEventListener("click", function () {
+            const sidebar = document.getElementById("sidebar");
+            const content = document.getElementById("content");
+
+            // Toggle the "collapsed" class on sidebar and content
+            sidebar.classList.toggle("collapsed");
+            content.classList.toggle("collapsed");
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+﻿<d<div class="wrapper">
+    <div class="content" id="content">
+
+        <h1 class="page-title">
+ <i class="fas fa-users"></i>            liste des utilisateurs
+            <span class="underline"></span>
+        </h1>
+
+            <div class="search-container">
+                <input type="text" id="searchBar" class="form-control glass-search" placeholder="Rechercher par nom ou prénom..." />
+            </div>
+                        <hr />
+
+                    <div class="table-responsive">
+
+            <table class="table table-hover align-middle shadow-lg rounded">
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="fas fa-id-card text-success me-2"></i>Nom
+                        </th>
+                        <th>
+                            <i class="fas fa-id-badge text-success me-2"></i>Prénom
+                        </th>
+                        <th>
+                            <i class="fas fa-envelope text-success me-2"></i>Email
+                        </th>
+                        <th >
+                            <i class="fas fa-tools text-success me-2"></i>Status
+                        </th>
+                        <th >
+                            <i class="fas fa-cogs text-success me-2"></i>Actions
+                            </th>
+                    </tr>
+                </thead>
+                <tbody id="userTable">
+                        @foreach (var user in Model)
+                        {
+                            <tr class="bg-light table-row-hover shadow-sm">
+                                <td>@user.Nom</td>
+                                <td>@user.Prenom</td>
+                                <td>@user.Email</td>
+                                <td>@(user.IsActive ? "Oui" : "Non")</td>
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                            <a href="@Url.Action("ActiverDasactiver", "Admin", new { userId = user.Id })" class="btn btn-outline-success btn-sm btn-icon">
+                                                <i class="fa fa-ban"></i> Désactiver
+                                            </a>
+                                    }
+                                    else
+                                    {
+                                            <a href="@Url.Action("ActiverDasactiver", "Admin", new { userId = user.Id })" class="btn btn-outline-success btn-sm btn-icon">
+                                                <i class="fa fa-check"></i> Activer
+                                            </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                </tbody>
+            </table>
+        </div>
+        <div id="pagination-container" class="pagination"></div>
+    </div>
+</div>
+
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+    .pagination button {
+        padding: 8px 12px;
+        border: none;
+        background-color: #198754;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .pagination button:hover {
+            background-color: #145c32;
+        }
+
+        .pagination button.active {
+            background-color: #145c32;
+            font-weight: bold;
+        }
+
+      .btn-icon:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+    }
+.page-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+    .page-title i {
+        color: #198754;
+        margin-right: 8px;
+    }
+
+/* Animation de soulignement */
+.underline {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background-color: #198754;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: underlineAnimation 0.8s ease-out forwards;
+}
+
+@@keyframes underlineAnimation {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+/* Conteneur principal */
+.wrapper {
+            display: flex;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+/* Titre avec animation de soulignure */
+
+
+    
+
+/* Barre de recherche */
+.search-container {
+    display: flex;
+    justify-content: flex-end; /* Aligner la barre de recherche à droite */
+    margin-bottom: 20px;
+}
+
+.glass-search {
+    width: 40%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .glass-search:focus {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+/* Tableau stylé */
+.table {
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-hover tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Actions */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Transitions fluides */
+* {
+    transition: all 0.3s ease;
+}
+</style>
+
+
+<script>
+    // Filtrage dynamique
+    document.getElementById("searchBar").addEventListener("keyup", function () {
+        const searchValue = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#userTable tr");
+
+        rows.forEach(row => {
+            const userName = row.cells[0]?.textContent.toLowerCase() || "";
+            const userEmail = row.cells[1]?.textContent.toLowerCase() || "";
+
+            if (userName.includes(searchValue) || userEmail.includes(searchValue)) {
+                row.style.display = ""; // Afficher la ligne
+            } else {
+                row.style.display = "none"; // Masquer la ligne
+            }
+        });
+    });
+</script>
+
+
+
+
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const rowsPerPage = 10; // Nombre de lignes par page
+    const table = document.querySelector("#userTable");
+    const rows = Array.from(table.rows);
+    const paginationContainer = document.getElementById("pagination-container");
+
+    function displayPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            if (index >= start && index < end) {
+                row.style.display = ""; // Afficher les lignes de cette page
+            } else {
+                row.style.display = "none"; // Masquer les autres lignes
+            }
+        });
+
+        updatePaginationButtons(page);
+    }
+
+    function updatePaginationButtons(activePage) {
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+        paginationContainer.innerHTML = ""; // Effacer les anciens boutons
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.textContent = i;
+            button.classList.add("pagination-button");
+            if (i === activePage) {
+                button.classList.add("active");
+            }
+            button.addEventListener("click", () => displayPage(i));
+            paginationContainer.appendChild(button);
+        }
+    }
+
+    // Initialiser avec la première page
+    if (rows.length > rowsPerPage) {
+        displayPage(1);
+    }
+});
+</script>

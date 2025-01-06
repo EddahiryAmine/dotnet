@@ -1,0 +1,20 @@
+﻿@model EmsiStudySpace.ViewModel.PrintFileViewModel
+
+<h2>Imprimer le fichier</h2>
+
+<p><strong>Nom du fichier :</strong> @Model.Titre</p>
+
+<!-- Aperçu du fichier si c'est un PDF ou une image -->
+@if (Model.FilePath.EndsWith(".pdf"))
+{
+    <iframe src="@Model.FilePath" width="100%" height="600px"></iframe>
+}
+else
+{
+    <p>Vous pouvez télécharger et imprimer ce fichier directement.</p>
+}
+
+<!-- Bouton d'impression -->
+<a href="@Model.FilePath" class="btn btn-primary" download> Télécharger le fichier </a>
+
+<button onclick="window.print()" class="btn btn-secondary">Imprimer</button>

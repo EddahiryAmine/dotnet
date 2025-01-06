@@ -1,0 +1,218 @@
+﻿<div class="wrapper">
+    <div class="content" id="content">
+        <div class="demo">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2 class="title">Liste des </h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Actif</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>@user.UserName</td>
+                                    <td>@user.Email</td>
+                                    <td>@(user.IsActive ? "Oui" : "Non")</td>
+                                    <td>
+                                        <ul class="action-list">
+                                            <li>
+                                                @if (user.IsActive)
+                                                {
+                                                    <a href="@Url.Action("ActiverDasactiver", "Admin", new { userId = user.Id })" data-tip="Désactiver">
+                                                        <i class="fa fa-ban"></i>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("ActiverDasactiver", "Admin", new { userId = user.Id })" data-tip="Activer">
+                                                        <i class="fa fa-check"></i>
+                                                    </a>
+                                                }
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* General Styles */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #e9f7ef; /* Light green background */
+        color: #2d3436; /* Neutral dark text */
+    }
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+    }
+
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 250px;
+    }
+
+    .panel {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .panel-heading {
+        background-color: #2ecc71; /* Vibrant green */
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .panel-body {
+        padding: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #dcdde1;
+    }
+
+    .table th {
+        background-color: #27ae60; /* Deep green */
+        color: white;
+    }
+
+    .table tr:hover {
+        background-color: #eafaf1; /* Subtle green highlight */
+    }
+
+    .action-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-list a {
+        text-decoration: none;
+        color: #27ae60;
+        font-size: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    .action-list a:hover {
+        transform: scale(1.1);
+        color: #1e8449; /* Darker green */
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        position: fixed;
+        width: 250px;
+        height: 100vh;
+        background-color: #27ae60; /* Main green */
+        color: white;
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-menu {
+        list-style: none;
+        padding: 0;
+    }
+
+    .navbar-item {
+        margin: 15px 0;
+    }
+
+    .navbar-link {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar-link:hover {
+        background-color: #1e8449; /* Darker green */
+    }
+
+    /* Toggle Button */
+    .toggle-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+        transform: rotate(90deg);
+        background-color: #1e8449;
+    }
+
+    /* Responsiveness */
+    @@media (max-width: 768px) {
+        .sidebar {
+            width: 200px;
+        }
+
+        .content {
+            margin-left: 200px;
+        }
+
+        .toggle-btn {
+            top: 15px;
+            left: 15px;
+        }
+    }
+</style>
+
+<script>
+    // JavaScript to handle sidebar toggle
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.querySelector(".toggle-btn");
+        const sidebar = document.querySelector(".sidebar");
+        const content = document.querySelector(".content");
+
+        toggleBtn.addEventListener("click", function () {
+            sidebar.classList.toggle("collapsed");
+            content.classList.toggle("collapsed");
+        });
+    });
+</script>

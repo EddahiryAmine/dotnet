@@ -1,0 +1,274 @@
+﻿@model EmsiStudySpace.ViewModel.StatisticsViewModel
+<body>
+    <div id="loading-spinner" class="spinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+<div class="wrapper">
+    <div class="content" id="content">
+            <div class="header">
+                <div class="logo-container">
+                    <img src="/Images/emsilogo.png" alt="EmsistadySpace Logo" class="logo">
+                </div>
+                <div class="app-name-container">
+
+                    <span class="app-name">
+                        <i class="fas fa-graduation-cap text-success me-2">EmsiStudySpace</i>
+                        
+                    </span>
+                </div>
+            </div>
+            <span class="underline"></span>
+
+
+        <!-- Cartes des statistiques -->
+        <div class="stat-cards">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-title">Professeurs</div>
+                <div class="stat-number">@Model.TotalProfessors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎓</div>
+                <div class="stat-title">Étudiants</div>
+                <div class="stat-number">@Model.TotalStudents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-title">Modules</div>
+                <div class="stat-number">@Model.TotalModules</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-title">Groupes</div>
+                <div class="stat-number">@Model.TotalGroups</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏫</div>
+                <div class="stat-title">Filières</div>
+                <div class="stat-number">@Model.TotalFiliere</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏢</div>
+                <div class="stat-title">Salles</div>
+                <div class="stat-number">@Model.TotalRooms</div>
+            </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div class="charts">
+            <div class="chart-container">
+                <canvas id="groupChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="studentChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique des Groupes par Filière
+    const groupChart = new Chart(document.getElementById('groupChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.GroupsPerFiliere.Select(g => g.FiliereName))),
+            datasets: [{
+                label: 'Groupes par Filière',
+                data: @Html.Raw(Json.Serialize(Model.GroupsPerFiliere.Select(g => g.GroupCount))),
+                backgroundColor: '#4CAF50',
+                borderColor: '#388E3C',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Groupes par Filière'
+                },
+                legend: {
+                    position: 'top',
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Graphique des Étudiants par Filière
+    const studentChart = new Chart(document.getElementById('studentChart'), {
+        type: 'pie',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.StudentsPerFiliere.Select(s => s.FiliereName))),
+            datasets: [{
+                label: 'Étudiants par Filière',
+                data: @Html.Raw(Json.Serialize(Model.StudentsPerFiliere.Select(s => s.StudentCount))),
+                backgroundColor: ['#FF9800', '#03A9F4', '#8BC34A', '#E91E63', '#FF5722'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Répartition des Étudiants'
+                },
+                legend: {
+                    position: 'top',
+                },
+            }
+        }
+    });
+</script>
+
+<style>
+
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Espace entre les éléments */
+        padding: 1em;
+        background-color: #f4f4f4; /* Couleur de fond */
+        border-bottom: 2px solid #ddd; /* Ligne de séparation */
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        width: 200px; /* Taille du logo */
+        height: auto; /* Conserve les proportions */
+    }
+
+    .app-name-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .app-name {
+        font-size: 1.8em; /* Taille du texte */
+        font-weight: bold; /* Texte en gras */
+        color: #198754; /* Couleur du texte */
+        font-family: 'Arial', sans-serif;
+        text-align: right;
+    }
+
+    
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f9f7;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    
+
+    .stat-cards {
+        display: flex;
+        justify-content: space-around;
+        gap: 30px;
+        margin: 50px auto;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+        width: 250px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .stat-icon {
+        font-size: 40px;
+        margin-bottom: 20px;
+        color: #198754;
+    }
+
+    .stat-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .charts {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 50px;
+    }
+
+    .chart-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        width: 45%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .spinner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3em;
+        border-top-color: #198754;
+    }
+
+</style>
+<script>
+    window.onload = function () {
+        const spinner = document.getElementById("loading-spinner");
+        spinner.style.display = "none"; // Masquer le spinner après le chargement complet
+    };
+</script>
+
+<script>
+    // JavaScript to handle the toggle action for the sidebar
+    document.getElementById("toggle-btn").addEventListener("click", function () {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+
+        // Toggle the "collapsed" class on sidebar and content
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("collapsed");
+    });
+
+
+</script>

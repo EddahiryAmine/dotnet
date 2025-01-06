@@ -1,0 +1,299 @@
+﻿@model IEnumerable<Reservation>
+<div class="wrapper">
+    <div class="content" id="content">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fa fa-calendar-check"></i>
+                Réservations en attente
+                <span class="underline"></span>
+            </h1>
+            <hr />
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert">
+                    <i class="fa fa-check-circle"></i> @TempData["Message"]
+                </div>
+            }
+
+            <!-- Bouton 'Voir toutes les réservations' -->
+            <div class="actions">
+                <a asp-action="AllReservations" class="btn btn-outline-success btn-sm btn-icon">
+                    <i class="fa fa-list"></i> Voir toutes les réservations
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table id="userTable" class="table table-hover align-middle shadow-sm rounded">
+                    <thead>
+                        <tr>
+                            <th><i class="fa fa-calendar text-success me-2"></i> Date</th>
+                            <th><i class="fa fa-chalkboard text-success me-2"></i> Salle</th>
+                            <th><i class="fa fa-chalkboard-teacher text-success me-2"></i> Professeur</th>
+                            <th><i class="fa fa-tasks text-success me-2"></i> Status</th>
+                            <th><i class="fa fa-cogs text-success me-2"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <i class="fa fa-info-circle text-warning me-2"></i> Aucun réservations en attente.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+
+                            @foreach (var reservation in Model)
+                            {
+                                <tr class="bg-light table-row-hover">
+                                    <td>@reservation.DateReservation.ToShortDateString()</td>
+                                    <td>@reservation.Room.Nom</td>
+                                    <td>@reservation.User.Nom</td>
+                                    <td class="status @reservation.Statut.ToString().ToLower()">@reservation.Statut</td>
+                                    <td class="actions-cell">
+                                        @if (reservation.Statut == StatutReservation.EnCours)
+                                        {
+                                            <form asp-action="Approve" method="post" class="action-form">
+                                                <input type="hidden" name="id" value="@reservation.Id" />
+                                                <button type="submit" class="btn btn-outline-success btn-sm btn-icon">
+                                                    <i class="fa fa-check"></i> Approuver
+                                                </button>
+                                            </form>
+                                            <form asp-action="Reject" method="post" class="action-form">
+                                                <input type="hidden" name="id" value="@reservation.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm btn-icon">
+                                                    <i class="fa fa-times"></i> Rejeter
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .search-container {
+            display: flex;
+            justify-content: flex-end; /* Aligner la barre de recherche à droite */
+            margin-bottom: 20px;
+        }
+
+        .glass-search {
+            width: 40%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .glass-search:focus {
+                transform: scale(1.05);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 10px;
+            overflow: hidden;
+        }
+
+            .page-title i {
+                color: #198754;
+                margin-right: 8px;
+            }
+
+     
+
+        .wrapper {
+            display: flex;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+        }
+
+            .content.collapsed {
+                margin-left: 80px;
+            }
+
+        /* Title animation */
+        .title-effect {
+            position: relative;
+            display: inline-block;
+        }
+
+            .title-effect::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                height: 4px;
+                width: 100%;
+                background: linear-gradient(to right, #198754, #198754);
+                border-radius: 2px;
+                animation: slide-in 1s ease forwards;
+            }
+
+       
+
+        .underline {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background-color: #198754;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underlineAnimation 0.8s ease-out forwards;
+        }
+
+        @@keyframes underlineAnimation {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+            /* Table headers gradient and shadow */
+        thead th {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+            thead th i {
+                font-size: 1.1rem;
+                vertical-align: middle;
+            }
+
+        /* Hover effect for rows */
+        .table-row-hover:hover {
+            background: #e8f5e9; /* Vert clair */
+            transition: background-color 0.3s ease;
+        }
+
+        /* Button animations */
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .btn-icon:hover {
+                transform: translateY(-3px);
+                box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+            }
+
+        /* Success message */
+        .alert-success {
+                background: linear-gradient(to right, #198754, #198754);
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .table {
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Actions */
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* Transitions fluides */
+        * {
+            transition: all 0.3s ease;
+        }
+
+        /* Alert */
+        .alert {
+                background-color: #198754;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .btn-icon {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+                .btn-icon:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0px 5px 10px rgba(40, 167, 69, 0.3); /* Vert */
+                }
+    </style>
+
+    <script>
+        // JavaScript to handle the toggle action for the sidebar
+        document.getElementById("toggle-btn").addEventListener("click", function () {
+            const sidebar = document.getElementById("sidebar");
+            const content = document.getElementById("content");
+
+            // Toggle the "collapsed" class on sidebar and content
+            sidebar.classList.toggle("collapsed");
+            content.classList.toggle("collapsed");
+        });
+    </script>
+    <script>
+        document.getElementById("searchInput").addEventListener("input", function () {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#reservationTable tbody tr");
+
+            rows.forEach(row => {
+                const date = row.cells[0].textContent.toLowerCase();
+                const room = row.cells[1].textContent.toLowerCase();
+                if (date.includes(searchValue) || room.includes(searchValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+</div>

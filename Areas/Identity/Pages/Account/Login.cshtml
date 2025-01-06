@@ -1,0 +1,72 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Connexion";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="~/css/iofrm-style.css">
+    <link rel="stylesheet" href="~/css/iofrm-theme42.css">
+
+</head>
+<body>
+    <div class="form-body form-left">
+        <div class="iofrm-layout">
+            <div class="img-holder text-start">
+                <div class="bg"></div>
+                <div class="info-holder">
+                    <img src="/Images/imageEmsi.png" alt="EMSI">
+                </div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content justify-content-end">
+                    <div class="form-items">
+                        <div class="website-logo-inside logo-normal">
+                                <div class="logo">
+                                <img src="/Images/emsilogo.png" alt="Logo Bienvenue">
+                            </div>
+                            </a>
+                        </div>
+                        <h3 class="font-md">Accomplissez plus de choses avec la plateforme emsiStudyspace.</h3>
+                        <p>Partagez et gérez facilement  grâce à notre plateforme intuitive.</p>
+
+                        <form method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                            <div class="form-group">
+                                <input asp-for="Input.Email" class="form-control" id="email" placeholder="Email" autocomplete="username" />
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input asp-for="Input.Password" class="form-control" id="password" placeholder="Mot de passe" autocomplete="current-password" />
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-button d-flex">
+
+                            <button id="submit" type="submit" class="btn btn-primary">Se connecter</button>
+                            </div>
+                            <div class="forgot-password">
+                                <a asp-page="./ForgotPassword" class="forgot-password-link">Mot de passe oublié ?</a>
+                            </div>
+
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/main.js"></script>
+</body>
+</html>

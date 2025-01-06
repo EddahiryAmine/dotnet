@@ -1,0 +1,236 @@
+﻿@model EmsiStudySpace.ViewModels.DocumentUploadViewModel
+
+@{
+    ViewData["Title"] = "Edit Document";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 2rem;
+        
+
+    
+        padding-top: 70px;
+    
+    }
+
+    .content {
+        flex-grow: 1;
+        padding-top: 60px; /* Ajustez si le nav est fixé */
+    }
+
+    .form-container {
+        margin: auto;
+        padding: 3rem;
+        max-width: 800px;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        margin-top: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #198754;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    h2::after {
+        content: '';
+        display: block;
+        margin: 0 auto;
+        width: 50px;
+        height: 3px;
+            background: #198754;
+        animation: expandUnderline 0.5s ease-in-out forwards;
+    }
+
+    @@keyframes expandUnderline {
+        from { width: 0; }
+        to { width: 50px; }
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-control,
+    .form-control-file {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-control-file:focus {
+            border-color: #198754;
+        outline: none;
+        box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+    }
+
+    textarea.form-control {
+        resize: none;
+    }
+
+    select.form-control {
+        appearance: none;
+        background: url('data:image/svg+xml;base64,...') no-repeat right 1rem center;
+        background-size: 10px;
+        padding-right: 2.5rem;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .form-col {
+        flex: 1 1 calc(50% - 1rem);
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #198754;
+        color: white;
+        border: none;
+        margin-right: 1rem;
+    }
+
+    .btn-primary:hover {
+            background-color: #198754;
+        transform: scale(1.05);
+    }
+
+    .btn-secondary {
+        background-color: #f0f0f0;
+        color: #333;
+        border: 2px solid #e0e0e0;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+    }
+
+    .form-container {
+        animation: fadeIn 1s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-back {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #198754;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+        .btn-back:hover {
+            color: #198754;
+        }
+</style>
+
+<div class="form-container">
+    <a href="javascript:history.back()" class="btn-back">← Retour</a>
+
+    <h2>Modifier document</h2>
+    <form asp-action="Edit" asp-controller="Document" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label asp-for="Titre"></label>
+                    <input asp-for="Titre" class="form-control" />
+                    <span asp-validation-for="Titre" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-col">
+                <div class="form-group">
+                    <label asp-for="TypeDocumentId">Type Document</label>
+                    <select asp-for="TypeDocumentId" class="form-control" asp-items="@(new SelectList(Model.TypeDocuments, "Id", "Nom"))">
+                        <option value="">-- Select a Type --</option>
+                    </select>
+                    <span asp-validation-for="TypeDocumentId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label asp-for="Format"></label>
+                    <input asp-for="Format" class="form-control" />
+                    <span asp-validation-for="Format" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-col">
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label asp-for="FileUpload">Uplodé Fichier</label>
+                    <input asp-for="FileUpload" class="form-control-file" />
+                    <span asp-validation-for="FileUpload" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-col">
+                <div class="form-group">
+                    <label asp-for="SelectedGroupIds">Assign Groups</label>
+                    <select asp-for="SelectedGroupIds" class="form-control" multiple asp-items="@(new SelectList(Model.AvailableGroups, "Id", "Nom"))">
+                    </select>
+                    <small class="form-text text-muted">Hold Ctrl (Cmd) to select multiple.</small>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="ModuleId" />
+        <input type="hidden" asp-for="ProfId" />
+
+        <div class="form-group mt-3 text-center">
+            <button type="submit" class="btn btn-primary">Sauvgarder les changements</button>
+            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
