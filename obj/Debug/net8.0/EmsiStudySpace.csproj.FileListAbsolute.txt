@@ -663,3 +663,4 @@ C:\Users\u\Desktop\EmsiStudySpace\EmsiStudySpace\obj\Debug\net8.0\refint\EmsiStu
 C:\Users\u\Desktop\EmsiStudySpace\EmsiStudySpace\obj\Debug\net8.0\EmsiStudySpace.pdb
 C:\Users\u\Desktop\EmsiStudySpace\EmsiStudySpace\obj\Debug\net8.0\EmsiStudySpace.genruntimeconfig.cache
 C:\Users\u\Desktop\EmsiStudySpace\EmsiStudySpace\obj\Debug\net8.0\ref\EmsiStudySpace.dll
+C:\Users\u\Desktop\EmsiStudySpace\EmsiStudySpace\obj\Debug\net8.0\EmsiStudySpace.sourcelink.json

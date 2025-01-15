@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "g7nSGJYY5yUVXb3IpX3C+OTwG9SLNjz7CP8mgcT2KSA=",
+  "Hash": "iGGZGgnGkROf9GSSyDcUJ5EAr18oOebDx2b9SzRw7bM=",
   "Source": "EmsiStudySpace",
   "BasePath": "_content/EmsiStudySpace",
   "Mode": "Default",
@@ -2960,6 +2960,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\a26204af-0b6a-4840-b8f9-ca584551f57c_Java Cours seance1.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\u\\Desktop\\EmsiStudySpace\\EmsiStudySpace\\wwwroot\\uploads\\f1931481-9d68-435f-a43e-702b90166c6a_Java Cours seance2.pdf",
+      "SourceId": "EmsiStudySpace",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\u\\Desktop\\EmsiStudySpace\\EmsiStudySpace\\wwwroot\\",
+      "BasePath": "_content/EmsiStudySpace",
+      "RelativePath": "uploads/f1931481-9d68-435f-a43e-702b90166c6a_Java Cours seance2.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\f1931481-9d68-435f-a43e-702b90166c6a_Java Cours seance2.pdf"
     }
   ]
 }

@@ -60,6 +60,30 @@
                             <i class="fas fa-clipboard-list"></i><span class="menu-text">Réservations</span>
                         </a>
                     </li>
+                    <li class="navbar-item dropdown position-relative">
+                        <a class="navbar-link" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-cog"></i> <span class="menu-text">Compte</span>
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="userMenu">
+                            <li>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus"></i> <span class="menu-text">Ajouter Utilisateur</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                    <i class="fas fa-user-cog"></i> <span class="menu-text">Modifier mot de passe</span>
+                                </a>
+                            </li>
+                            <li>
+                                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" class="m-0">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt"></i> <span class="menu-text">Déconnexion</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="navbar-item">
                         <a href="@Url.Action("UserHistory", "Admin")" class="navbar-link">
                             <i class="fas fa-history"></i><span class="menu-text">Historique</span>
@@ -70,30 +94,7 @@
                             <i class="fas fa-user-circle icon"></i> <span class="menu-text">Profile</span>
                         </a>
                     </li>
-                    <li class="navbar-item dropdown">
-                        <a class="navbar-link " href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-cog"></i> <span class="menu-text">Compte</span>
-                        </a>
-                        <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="userMenu">
-                            <li>
-                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">
-                                    <i class="fas fa-user-plus"></i>  <span class="menu-text">Ajouter Utilisateur</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
-                                    <i class="fas fa-user-cog"></i> <span class="menu-text"> Modifier mot de passe</span>
-                                </a>
-                            </li>
-                            <li>
-                                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" class="m-0">
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-sign-out-alt"></i>  <span class="menu-text">Déconnexion</span>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
+                  
                 </ul>
             </div>
         }
@@ -286,6 +287,26 @@
 </html>
 
 <style>
+    /* Positionnement correct du menu */
+    .custom-dropdown-menu {
+        z-index: 1050; /* Assure que le menu apparaît au-dessus des autres éléments */
+        left: 0; /* Aligne le menu avec son parent */
+        top: 100%; /* Positionne le menu juste en dessous du lien "Compte" */
+        margin-top: 0.5rem; /* Ajoute un espace entre le lien et le menu */
+    }
+
+        /* Espacement et alignement des items */
+        .custom-dropdown-menu .dropdown-item {
+            padding: 10px 15px; /* Espace interne pour les éléments */
+            display: flex; /* Alignement icon + texte */
+            align-items: center;
+        }
+
+            /* Espacement des icônes */
+            .custom-dropdown-menu .dropdown-item i {
+                margin-right: 8px; /* Espace entre l'icône et le texte */
+            }
+
     /* Changer la couleur de fond du menu déroulant */
     .custom-dropdown-menu {
         background-color: white !important; /* Couleur de fond blanche */

@@ -28,7 +28,6 @@
                         <tr>
                             <th><i class="fa fa-calendar text-success me-2"></i> Date</th>
                             <th><i class="fa fa-chalkboard text-success me-2"></i> Salle</th>
-                            <th><i class="fa fa-chalkboard-teacher text-success me-2"></i> Professeur</th>
                             <th><i class="fa fa-tasks text-success me-2"></i> Status</th>
                             <th><i class="fa fa-cogs text-success me-2"></i> Actions</th>
                         </tr>
@@ -50,7 +49,6 @@
                                 <tr class="bg-light table-row-hover">
                                     <td>@reservation.DateReservation.ToShortDateString()</td>
                                     <td>@reservation.Room.Nom</td>
-                                    <td>@reservation.User.Nom</td>
                                     <td class="status @reservation.Statut.ToString().ToLower()">@reservation.Statut</td>
                                     <td class="actions-cell">
                                         @if (reservation.Statut == StatutReservation.EnCours)
@@ -83,7 +81,7 @@
     <style>
         .search-container {
             display: flex;
-            justify-content: flex-end; /* Aligner la barre de recherche à droite */
+            justify-content: flex-end; 
             margin-bottom: 20px;
         }
 
@@ -180,7 +178,6 @@
             to {
                 transform: scaleX(1);
             }
-            /* Table headers gradient and shadow */
         thead th {
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -194,7 +191,6 @@
                 vertical-align: middle;
             }
 
-        /* Hover effect for rows */
         .table-row-hover:hover {
             background: #e8f5e9; /* Vert clair */
             transition: background-color 0.3s ease;

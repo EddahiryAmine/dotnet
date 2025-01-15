@@ -20,6 +20,9 @@
         <thead>
             <tr>
                         <th><i class="fa fa-calendar text-success me-2"></i> Date de Réservation</th>
+                        <th><i class="fas fa-arrow-left text-success me-2"></i>De</th>
+                        <th><i class="fas fa-arrow-right text-success me-2"></i>à</th>
+
                         <th><i class="fa fa-user text-success me-2"></i>Utilisateur</th>
                         <th><i class="fa fa-chalkboard-teacher text-success me-2"></i>Salle</th>
                         <th> <i class="fa fa-tasks text-success me-2"></i>Statut</th>
@@ -30,6 +33,8 @@
             {
                             <tr class="bg-light table-row-hover">
                     <td>@reservation.DateReservation.ToString("dd/MM/yyyy")</td>
+                            <td>@reservation.HeureDebut</td>
+                            <td>@reservation.HeureFin</td>
                     <td>@reservation.User?.UserName</td>
                     <td>@reservation.Room?.Nom</td>
                     <td>
